@@ -1,0 +1,29 @@
+2026-02-23 08:46:15 [INFO] Launching browser...
+2026-02-23 08:46:15 [INFO] Launching browser...
+2026-02-23 08:46:17 [INFO] Starting Scenario: User logs in successfully with valid credentials
+2026-02-23 08:46:17 [INFO] Starting Scenario: User logs in successfully with valid credentials
+2026-02-23 08:46:21 [INFO] Entering username
+2026-02-23 08:46:21 [INFO] Entering username
+2026-02-23 08:46:22 [INFO] Entering password
+2026-02-23 08:46:22 [INFO] Entering password
+2026-02-23 08:46:22 [INFO] Clicking login button
+2026-02-23 08:46:22 [INFO] Clicking login button
+2026-02-23 08:46:24 [INFO] Validating text equals: Logged In Successfully
+2026-02-23 08:46:24 [INFO] Scenario PASSED: User logs in successfully with valid credentials
+2026-02-23 08:46:24 [INFO] Validating text equals: Logged In Successfully_failed
+2026-02-23 08:46:25 [INFO] Deleting video (scenario passed)
+2026-02-23 08:46:25 [INFO] Closing browser...
+2026-02-23 08:46:25 [INFO] Browser closed
+2026-02-23 08:46:54 [ERROR] Scenario FAILED: User logs in successfully with valid credentials
+2026-02-23 08:46:55 [INFO] Trace saved (failure)
+2026-02-23 08:47:05 [INFO] Attaching video: C:\SoftwareTesting\Playwright\Playwright\reports\video\7f190574a487a43bb18ffc0df26d8e11.webm
+2026-02-23 08:47:05 [INFO] Starting Scenario: User logs in successfully with valid credentials
+2026-02-23 08:47:08 [INFO] Entering username
+2026-02-23 08:47:08 [INFO] Entering password
+2026-02-23 08:47:08 [INFO] Clicking login button
+2026-02-23 08:47:09 [INFO] Validating text equals: Logged In Successfully_failed
+2026-02-23 08:47:40 [ERROR] Scenario FAILED: User logs in successfully with valid credentials
+2026-02-23 08:47:40 [INFO] Trace saved (failure)
+2026-02-23 08:47:50 [INFO] Attaching video: C:\SoftwareTesting\Playwright\Playwright\reports\video\26241a5a3d8b55f3b9404ab360d4165f.webm
+2026-02-23 08:47:50 [INFO] Closing browser...
+2026-02-23 08:47:51 [INFO] Browser closed

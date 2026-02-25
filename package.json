@@ -1,0 +1,36 @@
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "rerun": "cucumber-js -p rerun",
+    "test:chrome": "cross-env BROWSER=chromium npm run test",
+    "test:firefox": "cross-env BROWSER=firefox npm run test",
+    "test:webkit": "cross-env BROWSER=webkit npm run test",
+    "test:headless": "cross-env HEADLESS=true npm run test",
+    "test:qa": "cross-env TEST_ENV=qa npm run test",
+    "test:uat": "cross-env TEST_ENV=uat npm run test",
+    "report": "node src/utils/generate-report.cjs",
+    "test:report": "npm-run-all --sequential --continue-on-error test report",
+    "trace": "npx playwright show-trace"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.6.0",
+    "@faker-js/faker": "^10.3.0",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.3.1",
+    "multiple-cucumber-html-reporter": "^3.10.0",
+    "npm-run-all": "^4.1.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "winston": "^3.19.0"
+  }
+}
