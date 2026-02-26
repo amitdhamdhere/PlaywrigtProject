@@ -5,15 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "cucumber-js",
-    "rerun": "cucumber-js -p rerun",
-    "test:chrome": "cross-env BROWSER=chromium npm run test",
-    "test:firefox": "cross-env BROWSER=firefox npm run test",
-    "test:webkit": "cross-env BROWSER=webkit npm run test",
-    "test:headless": "cross-env HEADLESS=true npm run test",
-    "test:qa": "cross-env TEST_ENV=qa npm run test",
-    "test:uat": "cross-env TEST_ENV=uat npm run test",
     "report": "node src/utils/generate-report.cjs",
     "test:report": "npm-run-all --sequential --continue-on-error test report",
+    "ci": "cross-env TEST_ENV=$TEST_ENV BROWSER=$BROWSER HEADLESS=$HEADLESS npm run test:report",
     "trace": "npx playwright show-trace"
   },
   "keywords": [],
