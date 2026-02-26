@@ -9,8 +9,12 @@ pipeline {
 
     environment {
         TEST_ENV = "${params.ENV}"
-        BROWSER = "${params.BROWSER}"
+        BROWSER  = "${params.BROWSER}"
         HEADLESS = "${params.HEADLESS}"
+    }
+
+    tools {
+        git 'DefaultGit'
     }
 
     stages {
@@ -21,9 +25,15 @@ pipeline {
             }
         }
 
+        stage('Clean Reports') {
+            steps {
+                bat 'if exist reports rmdir /s /q reports'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                bat 'if not exist node_modules npm install'
             }
         }
 
@@ -34,15 +44,11 @@ pipeline {
         }
 
         stage('Run Tests') {
- steps {
-        script {
-            try {
-                bat 'npm run ci'
-            } catch (err) {
-                currentBuild.result = 'UNSTABLE'
+            steps {
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    bat 'npm run ci'
+                }
             }
-        }
-    }
         }
 
         stage('Publish HTML Report') {
@@ -50,8 +56,19 @@ pipeline {
                 publishHTML(target: [
                     reportDir: 'reports/html',
                     reportFiles: 'index.html',
-                    reportName: 'Cucumber Report'
+                    reportName: 'Cucumber Report',
+                    keepAll: true,
+                    alwaysLinkToLastBuild: true
                 ])
+            }
+        }
+
+        stage('Deploy to QA') {
+            when {
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+            }
+            steps {
+                echo 'Deploying to QA...'
             }
         }
     }
@@ -59,6 +76,10 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'reports/**/*.*', fingerprint: true
+
+            cucumber buildStatus: 'UNSTABLE',
+                     fileIncludePattern: 'reports/*.json',
+                     jsonReportDirectory: 'reports'
         }
     }
 }
