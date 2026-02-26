@@ -34,9 +34,15 @@ pipeline {
         }
 
         stage('Run Tests') {
-            steps {
+ steps {
+        script {
+            try {
                 bat 'npm run ci'
+            } catch (err) {
+                currentBuild.result = 'UNSTABLE'
             }
+        }
+    }
         }
 
         stage('Publish HTML Report') {
