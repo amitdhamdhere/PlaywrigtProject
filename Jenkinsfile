@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "Node18"
-    }
-
     environment {
         TEST_ENV = "qa"
         HEADLESS = "true"
