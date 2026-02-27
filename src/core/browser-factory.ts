@@ -3,14 +3,32 @@ import { config } from "../config/config";
 
 export class BrowserFactory {
     static async launchBrowser(): Promise<Browser> {
-        const browserType = config.browser || "chronium";
-        const headless = config.headless;
+        const browserType = (config.browser || "chromium").toLowerCase();
 
-        switch (browserType.toLowerCase()) {
-            case "firefox": return await firefox.launch({ headless });
-            case "webkit": return await webkit.launch({ headless });
+        // Detect CI / Docker environment
+        const isCI = process.env.CI === "true";
+        const isDocker = process.env.DOCKER === "true";
+
+        // Headless logic:
+        // - Always headless in CI or Docker
+        // - Otherwise use config value
+        const headless = isCI || isDocker || config.headless;
+
+        const launchOptions = {
+            headless,
+            args: headless ? [] : ["--start-maximized"]
+        };
+
+        switch (browserType) {
+            case "firefox":
+                return await firefox.launch({ headless });
+
+            case "webkit":
+                return await webkit.launch({ headless });
+
             case "chromium":
-            default: return await chromium.launch({ headless, args: ["--start-maximized"] });
+            default:
+                return await chromium.launch(launchOptions);
         }
     }
 }
