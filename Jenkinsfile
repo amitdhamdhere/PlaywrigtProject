@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'mcr.microsoft.com/playwright:v1.58.2-jammy'
+            args '-v $WORKSPACE:/app -w /app'
+        }
+    }
 
     parameters {
         choice(name: 'ENV', choices: ['qa', 'uat'], description: 'Environment')
@@ -11,10 +16,7 @@ pipeline {
         TEST_ENV = "${params.ENV}"
         BROWSER  = "${params.BROWSER}"
         HEADLESS = "${params.HEADLESS}"
-    }
-
-    tools {
-        git 'DefaultGit'
+        CI = 'true'
     }
 
     stages {
@@ -27,26 +29,20 @@ pipeline {
 
         stage('Clean Reports') {
             steps {
-                bat 'if exist reports rmdir /s /q reports'
+                sh 'rm -rf reports || true'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'if not exist node_modules npm install'
-            }
-        }
-
-        stage('Install Playwright Browsers') {
-            steps {
-                bat 'npx playwright install'
+                sh 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                    bat 'npm run ci'
+                    sh 'npm run ci'
                 }
             }
         }
@@ -77,9 +73,9 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'reports/**/*.*', fingerprint: true
 
-        cucumber buildStatus: 'SUCCESS',
-                 fileIncludePattern: 'cucumber-report.json',
-                 jsonReportDirectory: 'reports'
+            cucumber buildStatus: 'SUCCESS',
+                     fileIncludePattern: 'cucumber-report.json',
+                     jsonReportDirectory: 'reports'
         }
     }
 }
