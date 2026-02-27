@@ -77,9 +77,9 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'reports/**/*.*', fingerprint: true
 
-            cucumber buildStatus: 'UNSTABLE',
-                     fileIncludePattern: 'reports/*.json',
-                     jsonReportDirectory: 'reports'
+        cucumber buildStatus: 'SUCCESS',
+                 fileIncludePattern: 'cucumber-report.json',
+                 jsonReportDirectory: 'reports'
         }
     }
 }
