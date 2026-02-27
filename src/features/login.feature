@@ -12,4 +12,4 @@ Feature: Login functionality
     When the user enters a valid username as "student"
     And the user enters a valid password as "Password123"
     And the user clicks on the login button
-    Then the user should see the login success message "Logged In Successfully_failed"
+    Then the user should see the login success message "Logged In Successfully"
