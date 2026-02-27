@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'mcr.microsoft.com/playwright:v1.58.2-jammy'
-            args '-v $WORKSPACE:/app -w /app'
+            args "-v ${WORKSPACE}:/app -w /app"
         }
     }
 
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh 'npm ci'
             }
         }
 
@@ -58,22 +58,13 @@ pipeline {
                 ])
             }
         }
-
-        stage('Deploy to QA') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
-            steps {
-                echo 'Deploying to QA...'
-            }
-        }
     }
 
     post {
         always {
             archiveArtifacts artifacts: 'reports/**/*.*', fingerprint: true
 
-            cucumber buildStatus: 'SUCCESS',
+            cucumber buildStatus: 'UNSTABLE',
                      fileIncludePattern: 'cucumber-report.json',
                      jsonReportDirectory: 'reports'
         }
