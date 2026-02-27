@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/playwright:v1.58.2-jammy'
-            args "-v ${WORKSPACE}:/app -w /app"
-        }
-    }
+    agent any
 
     parameters {
         choice(name: 'ENV', choices: ['qa', 'uat'], description: 'Environment')
@@ -21,28 +16,34 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                checkout scm
+        stage('Run Inside Docker') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.58.2-jammy'
+                    reuseNode true
+                }
             }
-        }
 
-        stage('Clean Reports') {
-            steps {
-                sh 'rm -rf reports || true'
-            }
-        }
+            stages {
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm ci'
-            }
-        }
+                stage('Checkout Code') {
+                    steps {
+                        checkout scm
+                    }
+                }
 
-        stage('Run Tests') {
-            steps {
-                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                    sh 'npm run ci'
+                stage('Install Dependencies') {
+                    steps {
+                        sh 'npm ci'
+                    }
+                }
+
+                stage('Run Tests') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                            sh 'npm run ci'
+                        }
+                    }
                 }
             }
         }
