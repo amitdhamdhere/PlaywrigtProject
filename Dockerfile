@@ -7,6 +7,4 @@ RUN npm ci
 
 COPY . .
 
-RUN npx playwright install --with-deps
-
 CMD ["npm", "run", "ci"]
