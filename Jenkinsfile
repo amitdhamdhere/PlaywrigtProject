@@ -20,7 +20,7 @@ pipeline {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.58.2-jammy'
-                    reuseNode true
+                    args '-u root -w /app'
                 }
             }
 
@@ -35,6 +35,12 @@ pipeline {
                 stage('Install Dependencies') {
                     steps {
                         sh 'npm ci'
+                    }
+                }
+
+                stage('Install Browsers') {
+                    steps {
+                        sh 'npx playwright install'
                     }
                 }
 
