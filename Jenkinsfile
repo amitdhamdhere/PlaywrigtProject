@@ -16,41 +16,28 @@ pipeline {
 
     stages {
 
-        stage('Run Inside Docker') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.58.2-jammy'
-                    args '-u root -w /app'
-                }
+        stage('Checkout Code') {
+            steps {
+                checkout scm
             }
+        }
 
-            stages {
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t playwright-project .'
+            }
+        }
 
-                stage('Checkout Code') {
-                    steps {
-                        checkout scm
-                    }
-                }
-
-                stage('Install Dependencies') {
-                    steps {
-                        sh 'npm ci'
-                    }
-                }
-
-                stage('Install Browsers') {
-                    steps {
-                        sh 'npx playwright install'
-                    }
-                }
-
-                stage('Run Tests') {
-                    steps {
-                        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                            sh 'npm run ci'
-                        }
-                    }
-                }
+        stage('Run Tests Inside Docker') {
+            steps {
+                bat """
+                docker run --rm ^
+                -e TEST_ENV=%TEST_ENV% ^
+                -e BROWSER=%BROWSER% ^
+                -e HEADLESS=%HEADLESS% ^
+                -v %cd%\\reports:/app/reports ^
+                playwright-project
+                """
             }
         }
 
